@@ -20,7 +20,7 @@ Promise.pipe(
   ],
   2,
   e => {
-    console.log(e);
+    console.log(e); // 每一次任务组(也就是两个任务)处理完后的回调s
   }
 ).then(arr => console.log(arr)); // 每次处理两个任务，处理完处理下两个任务。
 
