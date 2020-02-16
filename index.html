@@ -63,22 +63,24 @@
 
     let btn_pipe = document.querySelector(".pipe_send");
     let result_pipe = document.querySelector(".pipe_result");
-    Promise.pipe(
-      [
-        [sleep, [0]],
-        [sleep, [1]],
-        [sleep, [2]],
-        [sleep, [3]],
-        [sleep, [4]],
-        [sleep, [5]],
-      ],
-      2,
-      e => {
-        let item = document.createElement("div");
-        item.innerHTML = "收到请求" + e;
-        result_pipe.appendChild(item);
-      }
-    ).then(arr => console.log(arr));
+    btn_pipe.addEventListener("click", () => {
+      Promise.pipe(
+        [
+          [sleep, [0]],
+          [sleep, [1]],
+          [sleep, [2]],
+          [sleep, [3]],
+          [sleep, [4]],
+          [sleep, [5]]
+        ],
+        2,
+        e => {
+          let item = document.createElement("div");
+          item.innerHTML = "收到请求" + e;
+          result_pipe.appendChild(item);
+        }
+      ).then(arr => console.log(arr));
+    });
 
     let limiter = new Promise.Limiter(2);
     let btn_limiter = document.querySelector(".limiter_send");
