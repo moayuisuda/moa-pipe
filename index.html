@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: "Courier New", Courier, monospace;
+        flex-direction: column;
+      }
+
+      .send,
+      .sendAll {
+        padding: 30px;
+        font-size: 30px;
+        border-radius: 10px;
+        border: 2px solid black;
+        text-align: center;
+      }
+
+      .send:hover,
+      .sendAll:hover {
+        cursor: pointer;
+        background-color: #aaaaaa;
+      }
+
+      .result {
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .limiter {
+        margin-bottom: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>max = 2</h1>
+    <div class="limiter">
+      <div class="limiter_send send">发出请求(Promise.Limiter)</div>
+      <div class="limiter_result result"></div>
+    </div>
+    <div class="pipe">
+      <div class="pipe_send send">一次性发送所有请求(Promise.pipe)</div>
+      <div class="pipe_result result"></div>
+    </div>
+  </body>
+  <script src="./index.js"></script>
+  <script>
+    function sleep(e) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(e);
+        }, 2000);
+      });
+    }
+
+    let btn_pipe = document.querySelector(".pipe_send");
+    let result_pipe = document.querySelector(".pipe_result");
+    Promise.pipe(
+      [
+        [sleep, [0]],
+        [sleep, [1]],
+        [sleep, [2]],
+        [sleep, [3]],
+        [sleep, [4]],
+        [sleep, [5]],
+      ],
+      2,
+      e => {
+        let item = document.createElement("div");
+        item.innerHTML = "收到请求" + e;
+        result_pipe.appendChild(item);
+      }
+    ).then(arr => console.log(arr));
+
+    let limiter = new Promise.Limiter(2);
+    let btn_limiter = document.querySelector(".limiter_send");
+    let result_limiter = document.querySelector(".limiter_result");
+    let i = 0;
+    btn_limiter.addEventListener("click", () => {
+      btn_limiter.innerHTML = btn_limiter.innerHTML.match(/\D*/)[0] + i;
+      limiter.mount(sleep, [i]).then(e => {
+        let item = document.createElement("div");
+        item.innerHTML = "收到请求" + e;
+        result_limiter.appendChild(item);
+      });
+      i++;
+    });
+  </script>
+</html>
